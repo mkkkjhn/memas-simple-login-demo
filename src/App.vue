@@ -1,55 +1,64 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <router-view />
 </template>
 
-<style scoped lang="scss">
-$primary-color: #4fc08d;
-$logo-margin: 2rem;
-
-header {
-  line-height: 1.5;
-
-  .logo {
-    display: block;
-    margin: 0 auto $logo-margin;
-  }
-
-  .wrapper {
-    display: flex;
-    place-items: center;
-  }
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+body {
+  font-family: 'Courier New', monospace;
+  background: #1a1a1a;
+  color: #6bb86b;
+  overflow-x: hidden;
+}
 
-    .logo {
-      margin: 0 2rem 0 0;
-    }
+/* Global retro styles */
+.retro-text {
+  font-family: 'Courier New', monospace !important;
+  image-rendering: pixelated;
+}
 
-    .wrapper {
-      display: flex;
-      place-items: flex-start;
-      flex-wrap: wrap;
-    }
-  }
+/* Ensure all inputs and buttons have pixelated rendering */
+input, button, textarea, select {
+  font-family: 'Courier New', monospace;
+  image-rendering: pixelated;
+}
+
+/* Global glow effects for interactive elements */
+button:focus, input:focus {
+  outline: 2px solid #a8a832;
+  outline-offset: 2px;
+}
+
+/* Retro cursor */
+* {
+  cursor: default;
+}
+
+button {
+  cursor: pointer;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+  cursor: text;
+}
+
+/* Disable text selection for a more retro feel */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 </style>

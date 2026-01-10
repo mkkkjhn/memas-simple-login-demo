@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -71,6 +71,48 @@ const handlePasswordBlur = () => {
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
+
+// Mobile keyboard handling
+let resizeTimeout: number
+const handleViewportChange = () => {
+  // Debounce resize events
+  clearTimeout(resizeTimeout)
+  resizeTimeout = setTimeout(() => {
+    const viewportHeight = window.visualViewport?.height || window.innerHeight
+    const windowHeight = window.innerHeight
+
+    // Check if keyboard is likely visible (viewport smaller than window)
+    const keyboardVisible = viewportHeight < windowHeight * 0.8
+
+    document.documentElement.style.setProperty('--keyboard-visible', keyboardVisible ? '1' : '0')
+
+    // Scroll focused element into view if needed
+    const focusedElement = document.activeElement as HTMLElement
+    if (focusedElement && keyboardVisible) {
+      setTimeout(() => {
+        focusedElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        })
+      }, 300)
+    }
+  }, 100)
+}
+
+// Listen for viewport changes (keyboard show/hide)
+onMounted(() => {
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', handleViewportChange)
+  }
+  window.addEventListener('resize', handleViewportChange)
+})
+
+onUnmounted(() => {
+  if (window.visualViewport) {
+    window.visualViewport.removeEventListener('resize', handleViewportChange)
+  }
+  window.removeEventListener('resize', handleViewportChange)
+})
 
 // Computed error messages based on validation states
 const emailErrorMessage = computed(() => {
@@ -231,7 +273,8 @@ const handleSubmit = (e: Event) => {
             </span>
           </div>
 
-          <div class="button-wrapper">
+          <div class="form-actions">
+            <div class="button-wrapper">
             <button
               type="submit"
               class="retro-button"
@@ -246,6 +289,7 @@ const handleSubmit = (e: Event) => {
               Authenticating your credentials...
             </div>
           </div>
+        </div>
         </form>
       </div>
 
@@ -618,6 +662,7 @@ const handleSubmit = (e: Event) => {
   50% { opacity: 0.98; }
 }
 
+/* Mobile optimizations for better keyboard handling */
 @media (max-width: 768px) {
   .retro-login {
     margin: 1rem;
@@ -631,6 +676,149 @@ const handleSubmit = (e: Event) => {
   .retro-button {
     font-size: 1rem;
     padding: 0.75rem;
+    min-height: 48px; /* WCAG touch target minimum */
+  }
+
+  /* Larger touch targets for mobile */
+  .password-toggle {
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  input, button {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* Handle landscape orientation and keyboard visibility */
+@media (max-height: 600px) and (orientation: landscape) {
+  .retro-container {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .retro-login {
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+
+  .retro-header {
+    margin-bottom: 1rem;
+  }
+
+  .retro-form {
+    padding: 1rem 0;
+  }
+}
+
+/* Specific handling for very small screens */
+@media (max-height: 500px) {
+  .retro-container {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .retro-login {
+    padding: 1rem;
+  }
+
+  .pixel-border {
+    padding: 0.25rem;
+  }
+
+  .retro-title {
+    font-size: 1.2rem;
+  }
+
+  .input-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-actions {
+    margin-top: 1rem;
+  }
+}
+
+/* Ensure form stays accessible when virtual keyboard appears */
+@media (max-width: 768px) and (max-height: 500px) {
+  .retro-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+  }
+
+  .form-actions {
+    margin-top: auto;
+    padding-top: 1rem;
+  }
+}
+
+/* Improve touch interaction feedback on mobile */
+@media (hover: none) and (pointer: coarse) {
+  .retro-button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  .password-toggle:active {
+    transform: scale(0.95);
+  }
+
+  /* Ensure sufficient spacing between interactive elements */
+  .input-wrapper {
+    margin-bottom: 0.5rem;
+  }
+
+  .field-error {
+    margin-top: 0.75rem;
+  }
+}
+
+/* Dynamic keyboard handling */
+.retro-container:has(.retro-login) {
+  transition: padding 0.3s ease;
+}
+
+.retro-container:has(.retro-login)[style*="--keyboard-visible: 1"] {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.retro-container:has(.retro-login)[style*="--keyboard-visible: 1"] .retro-login {
+  max-height: calc(100vh - 2rem);
+  transition: max-height 0.3s ease;
+}
+
+/* Improve focus visibility on mobile */
+@media (max-width: 768px) {
+  input:focus, button:focus {
+    outline: 3px solid #a8a832;
+    outline-offset: 2px;
+  }
+
+  .password-toggle:focus {
+    outline: 3px solid #a8a832;
+    outline-offset: 1px;
+  }
+}
+
+/* Better tap targets for mobile */
+@media (max-width: 480px) {
+  .retro-input {
+    padding: 1rem 0.75rem; /* Larger padding for easier tapping */
+    min-height: 48px;
+  }
+
+  .retro-button {
+    padding: 1rem 2rem;
+    min-height: 52px;
+  }
+
+  /* Ensure labels are easily tappable */
+  .retro-label {
+    padding: 0.25rem 0;
+    margin-bottom: 0.75rem;
   }
 }
 </style>

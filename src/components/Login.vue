@@ -7,6 +7,7 @@ const email = ref('')
 const password = ref('')
 const error = ref('')
 const showPassword = ref(false)
+const rememberMe = ref(false)
 
 // Validation states following "reward early, punish late" principle
 const emailState = ref<'untouched' | 'valid' | 'invalid'>('untouched')
@@ -99,12 +100,35 @@ const handleViewportChange = () => {
   }, 100)
 }
 
+// Check for existing authentication on mount
+const checkExistingAuth = () => {
+  const localToken = localStorage.getItem('authToken')
+  const sessionToken = sessionStorage.getItem('authToken')
+
+  if (localToken || sessionToken) {
+    // User is already authenticated, redirect to dashboard
+    router.push('/dashboard')
+    return true
+  }
+
+  // Restore "Remember Me" preference if it exists
+  const rememberPreference = localStorage.getItem('rememberMe')
+  if (rememberPreference === 'true') {
+    rememberMe.value = true
+  }
+
+  return false
+}
+
 // Listen for viewport changes (keyboard show/hide)
 onMounted(() => {
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', handleViewportChange)
   }
   window.addEventListener('resize', handleViewportChange)
+
+  // Check if user is already authenticated
+  checkExistingAuth()
 })
 
 onUnmounted(() => {
@@ -140,7 +164,25 @@ const handleLogin = () => {
   isSubmitting.value = true
 
   setTimeout(() => {
-    // Simulate successful server response
+    // Simulate successful authentication
+    const authToken = 'demo-auth-token-' + Date.now()
+
+    // Store authentication based on "Remember Me" preference
+    if (rememberMe.value) {
+      // Remember for 30 days
+      localStorage.setItem('authToken', authToken)
+      localStorage.setItem('userEmail', email.value)
+      localStorage.setItem('rememberMe', 'true')
+    } else {
+      // Session only (cleared when browser closes)
+      sessionStorage.setItem('authToken', authToken)
+      sessionStorage.setItem('userEmail', email.value)
+      // Clear any previous localStorage data
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('userEmail')
+      localStorage.removeItem('rememberMe')
+    }
+
     router.push('/dashboard')
   }, 800)
 }
@@ -271,6 +313,21 @@ const handleSubmit = (e: Event) => {
             <span id="password-toggle-desc" class="sr-only">
               Toggle to show or hide password text
             </span>
+          </div>
+
+          <!-- Remember Me Option -->
+          <div class="form-options">
+            <label class="remember-label">
+              <input
+                type="checkbox"
+                v-model="rememberMe"
+                name="remember"
+                class="retro-checkbox"
+                autocomplete="on"
+              />
+              <span class="checkbox-custom"></span>
+              Remember me for 30 days
+            </label>
           </div>
 
           <div class="form-actions">
@@ -553,6 +610,59 @@ const handleSubmit = (e: Event) => {
   }
 }
 
+.form-options {
+  margin: 1.5rem 0 1rem 0;
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+  color: #6bb86b;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.retro-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-custom {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #4a9f4a;
+  background: #1a1a1a;
+  position: relative;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.retro-checkbox:checked + .checkbox-custom::after {
+  content: '✓';
+  position: absolute;
+  top: -2px;
+  left: 1px;
+  color: #a8a832;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.remember-label:hover .checkbox-custom {
+  border-color: #a8a832;
+  box-shadow: 0 0 6px rgba(168, 168, 50, 0.3);
+}
+
+.retro-checkbox:focus + .checkbox-custom {
+  outline: 3px solid #a8a832;
+  outline-offset: 2px;
+}
+
 .loading-message {
   margin-top: 0.5rem;
   font-family: 'Courier New', monospace;
@@ -813,6 +923,20 @@ const handleSubmit = (e: Event) => {
   .retro-button {
     padding: 1rem 2rem;
     min-height: 52px;
+  }
+
+  .remember-label {
+    font-size: 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .checkbox-custom {
+    width: 18px;
+    height: 18px;
+  }
+
+  .form-options {
+    margin: 1rem 0;
   }
 
   /* Ensure labels are easily tappable */

@@ -4,6 +4,14 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const handleLogout = () => {
+  // Clear all authentication data
+  localStorage.removeItem('authToken')
+  localStorage.removeItem('userEmail')
+  localStorage.removeItem('rememberMe')
+
+  sessionStorage.removeItem('authToken')
+  sessionStorage.removeItem('userEmail')
+
   router.push('/')
 }
 </script>

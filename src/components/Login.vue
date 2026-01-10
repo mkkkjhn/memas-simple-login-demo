@@ -6,6 +6,7 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 const error = ref('')
+const showPassword = ref(false)
 const isSubmitting = ref(false)
 const emailError = ref('')
 const passwordError = ref('')
@@ -41,6 +42,10 @@ const handlePasswordChange = () => {
   passwordError.value = validatePassword(password.value)
 }
 
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value
+}
+
 const handleLogin = () => {
   // Validate all fields
   const emailValidation = validateEmail(email.value)
@@ -57,38 +62,16 @@ const handleLogin = () => {
   if (isSubmitting.value) return
   isSubmitting.value = true
 
-  // DEMO APPROACH: SPA-style authentication simulation
-  // This is PERFECT for a demo because:
-  // ✅ No backend dependencies needed
-  // ✅ Easy to run and deploy
-  // ✅ Shows modern form handling patterns
-  // ✅ Demonstrates all the accessibility best practices
-  //
-  // PRODUCTION APPROACH: Traditional form submission
-  // 1. Remove preventDefault(), add action="/api/auth/login"
-  // 2. Server handles auth, sets httpOnly cookies, redirects
-  // Benefits: Better security, proper session management
-
   setTimeout(() => {
     // Simulate successful server response
     router.push('/dashboard')
-  }, 800) // Realistic server response time
+  }, 800)
 }
 
 const handleSubmit = (e: Event) => {
   e.preventDefault()
   handleLogin()
 }
-
-// WHY THIS WORKS FOR A DEMO:
-// 1. Shows all HTML best practices (autocomplete, accessibility, validation)
-// 2. Demonstrates modern Vue.js patterns
-// 3. No complex backend setup needed
-// 4. Easy to deploy as static site
-// 5. Perfect for showcasing retro gaming UI design
-//
-// The Evil Martians recommendation is for PRODUCTION auth,
-// but for DEMOS and UI showcases, SPA approach is ideal!
 </script>
 
 <template>
@@ -98,7 +81,7 @@ const handleSubmit = (e: Event) => {
     <div class="scanlines"></div>
 
     <div class="retro-login">
-      <!-- Retro Header -->
+
       <div class="retro-header">
         <div class="pixel-border">
           <h1 class="retro-title">█ LOGIN SYSTEM █</h1>
@@ -106,10 +89,9 @@ const handleSubmit = (e: Event) => {
         <div class="retro-subtitle">ENTER CREDENTIALS</div>
       </div>
 
-      <!-- Login Form -->
       <div class="retro-form">
         <form @submit="handleSubmit">
-          <!-- Email Field -->
+
           <div class="input-group">
             <label for="email" class="retro-label">EMAIL:</label>
             <div class="input-wrapper">
@@ -133,31 +115,77 @@ const handleSubmit = (e: Event) => {
             </div>
           </div>
 
-          <!-- Password Field -->
           <div class="input-group">
             <label for="password" class="retro-label">PASSWORD:</label>
             <div class="input-wrapper">
               <input
                 id="password"
                 v-model="password"
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 autocomplete="current-password"
                 placeholder="********"
                 class="retro-input"
                 :class="{ 'invalid': passwordError }"
                 :aria-invalid="!!passwordError"
                 :aria-errormessage="passwordError ? 'password-error' : undefined"
+                aria-describedby="password-toggle-desc"
                 @input="handlePasswordInput"
                 @change="handlePasswordChange"
                 required
               />
+              <button
+                type="button"
+                class="password-toggle"
+                :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                :aria-pressed="showPassword"
+                aria-describedby="password-toggle-desc"
+                @click="togglePasswordVisibility"
+              >
+                <svg
+                  v-if="!showPassword"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="password-icon"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                  <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/>
+                </svg>
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="password-icon"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/>
+                  <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"/>
+                  <path d="M3 3l18 18"/>
+                </svg>
+              </button>
             </div>
             <div v-if="passwordError" id="password-error" class="field-error" role="alert">
               ⚠ {{ passwordError }}
             </div>
+            <span id="password-toggle-desc" class="sr-only">
+              Toggle to show or hide password text
+            </span>
           </div>
 
-          <!-- Login Button -->
           <div class="button-wrapper">
             <button
               type="submit"
@@ -176,7 +204,6 @@ const handleSubmit = (e: Event) => {
         </form>
       </div>
 
-      <!-- Retro Decorations -->
       <div class="retro-decoration">
         <div class="corner-decoration top-left">█</div>
         <div class="corner-decoration top-right">█</div>
@@ -300,6 +327,53 @@ const handleSubmit = (e: Event) => {
 
 .input-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(26, 26, 26, 0.8);
+  border: 2px solid #4a9f4a;
+  border-radius: 0;
+  color: #6bb86b;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(74, 159, 74, 0.1);
+    border-color: #a8a832;
+    box-shadow: 0 0 8px rgba(168, 168, 50, 0.3);
+  }
+
+  &:focus-visible {
+    outline: 3px solid #a8a832;
+    outline-offset: 2px;
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+}
+
+.password-icon {
+  color: #6bb86b;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 3px rgba(107, 184, 107, 0.5));
+}
+
+.password-toggle:hover .password-icon {
+  color: #a8a832;
+  filter: drop-shadow(0 0 5px rgba(168, 168, 50, 0.7));
 }
 
 .retro-input {
@@ -352,6 +426,18 @@ const handleSubmit = (e: Event) => {
   background: rgba(159, 74, 74, 0.1);
   padding: 0.25rem 0.5rem;
   border-left: 3px solid #d46a6a;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .loading-message {
@@ -408,6 +494,11 @@ const handleSubmit = (e: Event) => {
   &:focus-visible {
     outline: 3px solid #a8a832;
     outline-offset: 2px;
+  }
+
+  &:focus-visible .password-icon {
+    color: #a8a832;
+    filter: drop-shadow(0 0 6px rgba(168, 168, 50, 0.8));
   }
 }
 

@@ -14,7 +14,6 @@ const handleLogout = () => {
     <div class="crt-overlay"></div>
     <div class="scanlines"></div>
 
-    <!-- Header -->
     <header class="retro-header">
       <div class="pixel-border">
         <div class="header-content">
@@ -26,10 +25,9 @@ const handleLogout = () => {
       </div>
     </header>
 
-    <!-- Main Content -->
     <main class="retro-main">
       <div class="retro-content">
-        <!-- Welcome Section -->
+
         <div class="welcome-section">
           <div class="kitty-display-large">
             <div class="image-border-large">
@@ -44,7 +42,6 @@ const handleLogout = () => {
           </div>
         </div>
 
-        <!-- Decorative Elements -->
         <div class="retro-decorations">
           <div class="corner-decoration top-left">█</div>
           <div class="corner-decoration top-right">█</div>

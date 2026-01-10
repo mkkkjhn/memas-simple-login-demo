@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -7,6 +7,10 @@ const email = ref('')
 const password = ref('')
 const error = ref('')
 const showPassword = ref(false)
+
+// Validation states following "reward early, punish late" principle
+const emailState = ref<'untouched' | 'valid' | 'invalid'>('untouched')
+const passwordState = ref<'untouched' | 'valid' | 'invalid'>('untouched')
 const isSubmitting = ref(false)
 const emailError = ref('')
 const passwordError = ref('')
@@ -24,27 +28,58 @@ const validatePassword = (value: string) => {
   return ''
 }
 
+// Clear errors immediately while typing
 const handleEmailInput = () => {
-  // Clear error while user is typing
-  emailError.value = ''
+  if (emailState.value === 'invalid') {
+    emailState.value = 'untouched'
+  }
+  // Show success immediately if valid
+  if (email.value && validateEmail(email.value) === '') {
+    emailState.value = 'valid'
+  }
 }
 
 const handlePasswordInput = () => {
-  // Clear error while user is typing
-  passwordError.value = ''
+  if (passwordState.value === 'invalid') {
+    passwordState.value = 'untouched'
+  }
+  // Show success immediately if valid
+  if (password.value && validatePassword(password.value) === '') {
+    passwordState.value = 'valid'
+  }
 }
 
-const handleEmailChange = () => {
-  emailError.value = validateEmail(email.value)
+// Late validation
+const handleEmailBlur = () => {
+  if (email.value) {
+    const validation = validateEmail(email.value)
+    emailState.value = validation ? 'invalid' : 'valid'
+  } else {
+    emailState.value = 'untouched'
+  }
 }
 
-const handlePasswordChange = () => {
-  passwordError.value = validatePassword(password.value)
+const handlePasswordBlur = () => {
+  if (password.value) {
+    const validation = validatePassword(password.value)
+    passwordState.value = validation ? 'invalid' : 'valid'
+  } else {
+    passwordState.value = 'untouched'
+  }
 }
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
+
+// Computed error messages based on validation states
+const emailErrorMessage = computed(() => {
+  return emailState.value === 'invalid' ? validateEmail(email.value) : ''
+})
+
+const passwordErrorMessage = computed(() => {
+  return passwordState.value === 'invalid' ? validatePassword(password.value) : ''
+})
 
 const handleLogin = () => {
   // Validate all fields
@@ -93,7 +128,10 @@ const handleSubmit = (e: Event) => {
         <form @submit="handleSubmit">
 
           <div class="input-group">
-            <label for="email" class="retro-label">EMAIL:</label>
+            <label for="email" class="retro-label">
+              EMAIL:
+              <span v-if="emailState === 'valid'" class="validation-indicator success">✓</span>
+            </label>
             <div class="input-wrapper">
               <input
                 id="email"
@@ -102,35 +140,42 @@ const handleSubmit = (e: Event) => {
                 autocomplete="username"
                 placeholder="user@domain.com"
                 class="retro-input"
-                :class="{ 'invalid': emailError }"
-                :aria-invalid="!!emailError"
-                :aria-errormessage="emailError ? 'email-error' : undefined"
+                :class="{
+                  'input-valid': emailState === 'valid',
+                  'input-invalid': emailState === 'invalid'
+                }"
+                :aria-invalid="emailState === 'invalid'"
                 @input="handleEmailInput"
-                @change="handleEmailChange"
+                @blur="handleEmailBlur"
                 required
               />
             </div>
-            <div v-if="emailError" id="email-error" class="field-error" role="alert">
-              ⚠ {{ emailError }}
+            <div v-if="emailErrorMessage" id="email-error" class="field-error" role="alert">
+              ⚠ {{ emailErrorMessage }}
             </div>
           </div>
 
           <div class="input-group">
-            <label for="password" class="retro-label">PASSWORD:</label>
+            <label for="password" class="retro-label">
+              PASSWORD:
+              <span v-if="passwordState === 'valid'" class="validation-indicator success">✓</span>
+            </label>
             <div class="input-wrapper">
               <input
                 id="password"
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
                 autocomplete="current-password"
-                placeholder="********"
+                placeholder="******"
                 class="retro-input"
-                :class="{ 'invalid': passwordError }"
-                :aria-invalid="!!passwordError"
-                :aria-errormessage="passwordError ? 'password-error' : undefined"
+                :class="{
+                  'input-valid': passwordState === 'valid',
+                  'input-invalid': passwordState === 'invalid'
+                }"
+                :aria-invalid="passwordState === 'invalid'"
                 aria-describedby="password-toggle-desc"
                 @input="handlePasswordInput"
-                @change="handlePasswordChange"
+                @blur="handlePasswordBlur"
                 required
               />
               <button
@@ -178,8 +223,8 @@ const handleSubmit = (e: Event) => {
                 </svg>
               </button>
             </div>
-            <div v-if="passwordError" id="password-error" class="field-error" role="alert">
-              ⚠ {{ passwordError }}
+            <div v-if="passwordErrorMessage" id="password-error" class="field-error" role="alert">
+              ⚠ {{ passwordErrorMessage }}
             </div>
             <span id="password-toggle-desc" class="sr-only">
               Toggle to show or hide password text
@@ -402,6 +447,20 @@ const handleSubmit = (e: Event) => {
     background: #252525;
   }
 
+  &.input-valid {
+    border-color: #6bb86b;
+    box-shadow:
+      0 0 8px rgba(107, 184, 107, 0.3),
+      inset 0 0 6px rgba(107, 184, 107, 0.1);
+  }
+
+  &.input-invalid {
+    border-color: #d46a6a;
+    box-shadow:
+      0 0 8px rgba(212, 106, 106, 0.3),
+      inset 0 0 6px rgba(212, 106, 106, 0.1);
+  }
+
   &.invalid {
     border-color: #d46a6a;
     box-shadow: inset 0 0 8px rgba(212, 106, 106, 0.2);
@@ -438,6 +497,16 @@ const handleSubmit = (e: Event) => {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.validation-indicator {
+  margin-left: 0.5rem;
+  font-weight: bold;
+
+  &.success {
+    color: #6bb86b;
+    text-shadow: 0 0 4px #6bb86b;
+  }
 }
 
 .loading-message {

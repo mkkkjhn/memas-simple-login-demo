@@ -378,7 +378,6 @@ const handleSubmit = (e: Event) => {
 
 .retro-header {
   text-align: center;
-  margin-bottom: $retro-spacing-xl;
 }
 
 .input-group {

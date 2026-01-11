@@ -74,6 +74,8 @@ const handleLogout = () => {
   padding: $retro-spacing-md $retro-spacing-xl;
   position: relative;
   z-index: 2;
+  max-width: $retro-container-width;
+  margin: 0 auto $retro-spacing-xl;
 }
 
 .header-content {
@@ -129,6 +131,8 @@ const handleLogout = () => {
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 100px);
+  max-width: $retro-container-width;
+  margin: 0 auto;
   padding: $retro-spacing-xl;
   position: relative;
   z-index: 1;
@@ -149,8 +153,8 @@ const handleLogout = () => {
 
 .welcome-section {
   display: grid;
-  grid-template-columns: 70% 30%;
-  gap: $retro-spacing-xl;
+  grid-template-columns: 1fr;
+  gap: $retro-spacing-lg;
   align-items: center;
   height: 100%;
 }
@@ -220,11 +224,6 @@ const handleLogout = () => {
 
   .retro-content {
     padding: $retro-spacing-lg;
-  }
-
-  .welcome-section {
-    grid-template-columns: 1fr;
-    gap: $retro-spacing-lg;
   }
 
   .retro-kitty-large {

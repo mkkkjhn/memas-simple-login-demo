@@ -59,6 +59,7 @@ $retro-transition-fast: 0.1s ease;
 $retro-transition-base: 0.3s ease;
 $retro-transition-slow: 0.5s ease;
 
+$retro-container-width: 1400px;
 
 :root {
   --retro-green: #{$retro-green};
@@ -121,4 +122,6 @@ $retro-transition-slow: 0.5s ease;
   --retro-transition-fast: #{$retro-transition-fast};
   --retro-transition-base: #{$retro-transition-base};
   --retro-transition-slow: #{$retro-transition-slow};
+
+  --retro-container-width: #($retro-container-width);
 }

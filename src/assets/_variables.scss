@@ -1,0 +1,124 @@
+$retro-green: #6bb86b;
+$retro-green-dark: #4a9f4a;
+$retro-green-darker: #2d5016;
+$retro-green-light: #8bbf62;
+$retro-green-bg: rgba(107, 184, 107, 0.1);
+
+$retro-yellow: #a8a832;
+$retro-yellow-dark: #8a8a2a;
+$retro-yellow-light: #d4d4a8;
+
+$retro-purple: #7a5a8a;
+$retro-purple-dark: #5a4a6a;
+
+$retro-red: #d46a6a;
+$retro-red-dark: #9f4a4a;
+$retro-red-bg: rgba(159, 74, 74, 0.1);
+
+$retro-bg-primary: #1a1a1a;
+$retro-bg-secondary: #2a2a2a;
+$retro-bg-tertiary: #2d2d2d;
+$retro-bg-input: #1a1a1a;
+
+$retro-text-primary: #6bb86b;
+$retro-text-secondary: #a8a832;
+$retro-text-muted: #4a7a4a;
+
+$retro-border-primary: #4a9f4a;
+$retro-border-secondary: #a8a832;
+$retro-border-accent: #7a5a8a;
+
+$retro-glow-green: rgba(107, 184, 107, 0.5);
+$retro-glow-yellow: rgba(168, 168, 50, 0.5);
+$retro-glow-purple: rgba(122, 90, 138, 0.3);
+$retro-glow-red: rgba(212, 106, 106, 0.3);
+
+$retro-shadow-sm: 0 0 8px;
+$retro-shadow-md: 0 0 15px;
+$retro-shadow-lg: 0 0 20px;
+
+$retro-spacing-xs: 0.25rem;
+$retro-spacing-sm: 0.5rem;
+$retro-spacing-md: 1rem;
+$retro-spacing-lg: 1.5rem;
+$retro-spacing-xl: 2rem;
+
+$retro-font-family: 'Courier New', monospace;
+$retro-font-size-sm: 0.8rem;
+$retro-font-size-md: 0.9rem;
+$retro-font-size-base: 1rem;
+$retro-font-size-lg: 1.2rem;
+$retro-font-size-xl: 1.5rem;
+$retro-font-size-2xl: 2rem;
+
+$retro-border-thin: 2px;
+$retro-border-medium: 3px;
+$retro-border-thick: 4px;
+
+$retro-transition-fast: 0.1s ease;
+$retro-transition-base: 0.3s ease;
+$retro-transition-slow: 0.5s ease;
+
+
+:root {
+  --retro-green: #{$retro-green};
+  --retro-green-dark: #{$retro-green-dark};
+  --retro-green-darker: #{$retro-green-darker};
+  --retro-green-light: #{$retro-green-light};
+  --retro-green-bg: #{$retro-green-bg};
+
+  --retro-yellow: #{$retro-yellow};
+  --retro-yellow-dark: #{$retro-yellow-dark};
+  --retro-yellow-light: #{$retro-yellow-light};
+
+  --retro-purple: #{$retro-purple};
+  --retro-purple-dark: #{$retro-purple-dark};
+
+  --retro-red: #{$retro-red};
+  --retro-red-dark: #{$retro-red-dark};
+  --retro-red-bg: #{$retro-red-bg};
+
+  --retro-bg-primary: #{$retro-bg-primary};
+  --retro-bg-secondary: #{$retro-bg-secondary};
+  --retro-bg-tertiary: #{$retro-bg-tertiary};
+  --retro-bg-input: #{$retro-bg-input};
+
+  --retro-text-primary: #{$retro-text-primary};
+  --retro-text-secondary: #{$retro-text-secondary};
+  --retro-text-muted: #{$retro-text-muted};
+
+  --retro-border-primary: #{$retro-border-primary};
+  --retro-border-secondary: #{$retro-border-secondary};
+  --retro-border-accent: #{$retro-border-accent};
+
+  --retro-glow-green: #{$retro-glow-green};
+  --retro-glow-yellow: #{$retro-glow-yellow};
+  --retro-glow-purple: #{$retro-glow-purple};
+  --retro-glow-red: #{$retro-glow-red};
+
+  --retro-shadow-sm: #{$retro-shadow-sm};
+  --retro-shadow-md: #{$retro-shadow-md};
+  --retro-shadow-lg: #{$retro-shadow-lg};
+
+  --retro-spacing-xs: #{$retro-spacing-xs};
+  --retro-spacing-sm: #{$retro-spacing-sm};
+  --retro-spacing-md: #{$retro-spacing-md};
+  --retro-spacing-lg: #{$retro-spacing-lg};
+  --retro-spacing-xl: #{$retro-spacing-xl};
+
+  --retro-font-family: #{$retro-font-family};
+  --retro-font-size-sm: #{$retro-font-size-sm};
+  --retro-font-size-md: #{$retro-font-size-md};
+  --retro-font-size-base: #{$retro-font-size-base};
+  --retro-font-size-lg: #{$retro-font-size-lg};
+  --retro-font-size-xl: #{$retro-font-size-xl};
+  --retro-font-size-2xl: #{$retro-font-size-2xl};
+
+  --retro-border-thin: #{$retro-border-thin};
+  --retro-border-medium: #{$retro-border-medium};
+  --retro-border-thick: #{$retro-border-thick};
+
+  --retro-transition-fast: #{$retro-transition-fast};
+  --retro-transition-base: #{$retro-transition-base};
+  --retro-transition-slow: #{$retro-transition-slow};
+}

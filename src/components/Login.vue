@@ -138,7 +138,6 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleViewportChange)
 })
 
-// Computed error messages based on validation states
 const emailErrorMessage = computed(() => {
   return emailState.value === 'invalid' ? validateEmail(email.value) : ''
 })
@@ -194,12 +193,12 @@ const handleSubmit = (e: Event) => {
 </script>
 
 <template>
-  <div class="retro-container">
+  <div class="retro-container crt-screen">
     <!-- CRT Screen Effect -->
     <div class="crt-overlay"></div>
     <div class="scanlines"></div>
 
-    <div class="retro-login">
+    <div class="retro-box retro-login">
 
       <div class="retro-header">
         <div class="pixel-border">
@@ -244,7 +243,7 @@ const handleSubmit = (e: Event) => {
               PASSWORD:
               <span v-if="passwordState === 'valid'" class="validation-indicator success">✓</span>
             </label>
-            <div class="input-wrapper">
+            <div class="input-wrapper password-input-wrapper">
               <input
                 id="password"
                 v-model="password"
@@ -361,114 +360,28 @@ const handleSubmit = (e: Event) => {
 </template>
 
 <style scoped lang="scss">
+@use '../assets/variables' as *;
+
 .retro-container {
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: #1a1a1a;
-  overflow: hidden;
-
-  // CRT Screen Effect
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 100, 0, 0.05);
-    pointer-events: none;
-  }
-}
-
-.crt-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 80, 0, 0.02);
-  pointer-events: none;
-  animation: flicker 0.15s infinite linear alternate;
-}
-
-.scanlines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 60, 0, 0.02) 2px,
-    rgba(0, 60, 0, 0.02) 4px
-  );
-  pointer-events: none;
+  padding: 20px;
 }
 
 .retro-login {
-  position: relative;
-  background: #2a2a2a;
-  border: 3px solid #4a9f4a;
-  padding: 2rem;
   width: 100%;
   max-width: 450px;
-  box-shadow:
-    0 0 15px rgba(74, 159, 74, 0.3),
-    inset 0 0 15px rgba(74, 159, 74, 0.05);
-  z-index: 1;
+  position: relative;
 }
 
 .retro-header {
   text-align: center;
-  margin-bottom: 2rem;
-}
-
-.pixel-border {
-  border: 2px solid #a8a832;
-  border-radius: 0;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  background: #2d2d2d;
-  box-shadow: 0 0 8px rgba(168, 168, 50, 0.2);
-}
-
-.retro-title {
-  font-family: 'Courier New', monospace;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #6bb86b;
-  text-shadow: 0 0 8px #6bb86b;
-  letter-spacing: 2px;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.retro-subtitle {
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  color: #a8a832;
-  text-shadow: 0 0 4px #a8a832;
-  letter-spacing: 1px;
+  margin-bottom: $retro-spacing-xl;
 }
 
 .input-group {
-  margin-bottom: 1.5rem;
-}
-
-.retro-label {
-  display: block;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  color: #a8a832;
-  text-shadow: 0 0 4px #a8a832;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  letter-spacing: 1px;
+  margin-bottom: $retro-spacing-lg;
 }
 
 .input-wrapper {
@@ -477,141 +390,75 @@ const handleSubmit = (e: Event) => {
   align-items: center;
 }
 
+.password-input-wrapper .retro-input {
+  padding-right: 3rem;
+}
+
 .password-toggle {
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(26, 26, 26, 0.8);
-  border: 2px solid #4a9f4a;
-  border-radius: 0;
-  color: #6bb86b;
+  background: transparent;
+  border: none !important;
+  outline: none;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  color: $retro-text-primary;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: $retro-spacing-xs;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  transition: all 0.3s ease;
+  transition: all $retro-transition-base;
 
   &:hover {
-    background: rgba(74, 159, 74, 0.1);
-    border-color: #a8a832;
-    box-shadow: 0 0 8px rgba(168, 168, 50, 0.3);
+    background: rgba(74, 159, 74, 0.3);
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+    border: none;
   }
 
   &:focus-visible {
-    outline: 3px solid #a8a832;
+    outline: 3px solid $retro-yellow;
     outline-offset: 2px;
+    border: none;
+    box-shadow: none;
   }
 
   &:active {
     transform: translateY(-50%) scale(0.95);
+    border: none;
+    outline: none;
   }
 }
 
 .password-icon {
-  color: #6bb86b;
-  transition: all 0.3s ease;
-  filter: drop-shadow(0 0 3px rgba(107, 184, 107, 0.5));
+  color: $retro-text-primary;
+  transition: all $retro-transition-base;
+  filter: drop-shadow(0 0 3px $retro-glow-green);
 }
 
 .password-toggle:hover .password-icon {
-  color: #a8a832;
-  filter: drop-shadow(0 0 5px rgba(168, 168, 50, 0.7));
+  color: $retro-yellow;
+  filter: drop-shadow(0 0 8px rgba(168, 168, 50, 0.9));
 }
 
-.retro-input {
-  width: 100%;
-  padding: 0.75rem;
-  background: #1a1a1a;
-  border: 2px solid #4a9f4a;
-  border-radius: 0;
-  color: #6bb86b;
-  font-family: 'Courier New', monospace;
-  font-size: 1rem;
-  box-shadow: inset 0 0 8px rgba(74, 159, 74, 0.1);
-  transition: all 0.3s ease;
-
-  &::placeholder {
-    color: #4a7a4a;
-  }
-
-  &:focus {
-    outline: 3px solid #a8a832;
-    outline-offset: 2px;
-    border-color: #a8a832;
-    box-shadow:
-      0 0 12px rgba(168, 168, 50, 0.3),
-      inset 0 0 8px rgba(168, 168, 50, 0.1);
-    background: #252525;
-  }
-
-  &.input-valid {
-    border-color: #6bb86b;
-    box-shadow:
-      0 0 8px rgba(107, 184, 107, 0.3),
-      inset 0 0 6px rgba(107, 184, 107, 0.1);
-  }
-
-  &.input-invalid {
-    border-color: #d46a6a;
-    box-shadow:
-      0 0 8px rgba(212, 106, 106, 0.3),
-      inset 0 0 6px rgba(212, 106, 106, 0.1);
-  }
-
-  &.invalid {
-    border-color: #d46a6a;
-    box-shadow: inset 0 0 8px rgba(212, 106, 106, 0.2);
-
-    &:focus {
-      outline-color: #d46a6a;
-      border-color: #d46a6a;
-      box-shadow:
-        0 0 12px rgba(212, 106, 106, 0.3),
-        inset 0 0 8px rgba(212, 106, 106, 0.2);
-    }
-  }
-}
-
-.field-error {
-  margin-top: 0.5rem;
-  font-family: 'Courier New', monospace;
-  color: #d46a6a;
-  text-shadow: 0 0 4px #d46a6a;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
-  background: rgba(159, 74, 74, 0.1);
-  padding: 0.25rem 0.5rem;
-  border-left: 3px solid #d46a6a;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.validation-indicator {
-  margin-left: 0.5rem;
-  font-weight: bold;
-
-  &.success {
-    color: #6bb86b;
-    text-shadow: 0 0 4px #6bb86b;
-  }
+.password-toggle:focus-visible .password-icon {
+  color: $retro-yellow;
+  filter: drop-shadow(0 0 10px rgba(168, 168, 50, 1));
 }
 
 .form-options {
-  margin: 1.5rem 0 1rem 0;
+  margin: $retro-spacing-lg 0 $retro-spacing-md 0;
 }
 
 .remember-label {
@@ -619,9 +466,9 @@ const handleSubmit = (e: Event) => {
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
-  font-family: 'Courier New', monospace;
-  color: #6bb86b;
-  font-size: 0.9rem;
+  font-family: $retro-font-family;
+  color: $retro-text-primary;
+  font-size: $retro-font-size-md;
   user-select: none;
 }
 
@@ -636,10 +483,10 @@ const handleSubmit = (e: Event) => {
 .checkbox-custom {
   width: 16px;
   height: 16px;
-  border: 2px solid #4a9f4a;
-  background: #1a1a1a;
+  border: $retro-border-thin solid $retro-border-primary;
+  background: $retro-bg-input;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all $retro-transition-base;
   flex-shrink: 0;
 }
 
@@ -648,80 +495,80 @@ const handleSubmit = (e: Event) => {
   position: absolute;
   top: -2px;
   left: 1px;
-  color: #a8a832;
+  color: $retro-yellow;
   font-size: 12px;
   font-weight: bold;
 }
 
 .remember-label:hover .checkbox-custom {
-  border-color: #a8a832;
-  box-shadow: 0 0 6px rgba(168, 168, 50, 0.3);
+  border-color: $retro-yellow;
+  box-shadow: 0 0 6px $retro-glow-yellow;
 }
 
 .retro-checkbox:focus + .checkbox-custom {
-  outline: 3px solid #a8a832;
+  outline: 3px solid $retro-yellow;
   outline-offset: 2px;
 }
 
 .loading-message {
-  margin-top: 0.5rem;
-  font-family: 'Courier New', monospace;
-  color: #a8a832;
-  text-shadow: 0 0 4px #a8a832;
-  font-size: 0.8rem;
+  margin-top: $retro-spacing-sm;
+  font-family: $retro-font-family;
+  color: $retro-yellow;
+  text-shadow: 0 0 4px $retro-yellow;
+  font-size: $retro-font-size-sm;
   letter-spacing: 1px;
   text-align: center;
 }
 
-.button-wrapper {
-  margin-top: 2rem;
+.form-actions {
+  margin-top: $retro-spacing-xl;
 }
 
 .retro-button {
   width: 100%;
-  padding: 1rem;
-  background: #2d5016;
-  border: 3px solid #6b9f4a;
+  padding: $retro-spacing-md;
+  background: $retro-green-darker;
+  border: $retro-border-medium solid $retro-green-dark;
   border-radius: 0;
-  color: #a8d4a8;
-  font-family: 'Courier New', monospace;
-  font-size: 1.2rem;
+  color: $retro-yellow-light;
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-lg;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 2px;
-  box-shadow: 0 0 12px rgba(107, 159, 74, 0.3);
-  transition: all 0.3s ease;
+  box-shadow: $retro-shadow-sm $retro-glow-green;
+  transition: all $retro-transition-base;
 
   &:hover:not(:disabled) {
     background: #3d6020;
-    border-color: #8bbf62;
+    border-color: $retro-green-light;
     box-shadow: 0 0 18px rgba(139, 191, 98, 0.5);
     transform: scale(1.02);
   }
 
   &:active:not(:disabled) {
     transform: scale(0.98);
-    box-shadow: 0 0 8px rgba(107, 159, 74, 0.2);
+    box-shadow: 0 0 8px rgba(107, 184, 107, 0.2);
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    background: #1a1a1a;
-    border-color: #4a9f4a;
+    background: $retro-bg-primary;
+    border-color: $retro-border-primary;
     box-shadow: none;
     transform: none;
   }
 
   &:focus-visible {
-    outline: 3px solid #a8a832;
+    outline: 3px solid $retro-yellow;
     outline-offset: 2px;
   }
 
   &:focus-visible .password-icon {
-    color: #a8a832;
-    filter: drop-shadow(0 0 6px rgba(168, 168, 50, 0.8));
+    color: $retro-yellow;
+    filter: drop-shadow(0 0 10px rgba(168, 168, 50, 1));
   }
 }
 
@@ -739,113 +586,95 @@ const handleSubmit = (e: Event) => {
   pointer-events: none;
 }
 
-.corner-decoration {
-  position: absolute;
-  font-family: 'Courier New', monospace;
-  font-size: 1.5rem;
-  color: #4a9f4a;
-  text-shadow: 0 0 4px #4a9f4a;
-
-  &.top-left {
-    top: 10px;
-    left: 10px;
-  }
-
-  &.top-right {
-    top: 10px;
-    right: 10px;
-  }
-
-  &.bottom-left {
-    bottom: 10px;
-    left: 10px;
-  }
-
-  &.bottom-right {
-    bottom: 10px;
-    right: 10px;
-  }
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.98; }
-}
-
 /* Mobile optimizations for better keyboard handling */
 @media (max-width: 768px) {
   .retro-login {
-    margin: 1rem;
-    padding: 1.5rem;
+    margin: $retro-spacing-md;
+    padding: $retro-spacing-lg;
   }
 
   .retro-title {
-    font-size: 1.5rem;
+    font-size: $retro-font-size-xl;
   }
 
   .retro-button {
-    font-size: 1rem;
+    font-size: $retro-font-size-base;
     padding: 0.75rem;
-    min-height: 48px; /* WCAG touch target minimum */
+    min-height: 48px;
   }
 
-  /* Larger touch targets for mobile */
   .password-toggle {
     min-width: 48px;
     min-height: 48px;
   }
 
   input, button {
-    font-size: 16px; /* Prevent zoom on iOS */
+    font-size: 16px;
+  }
+
+  input:focus, button:focus {
+    outline: 3px solid $retro-yellow;
+    outline-offset: 2px;
+  }
+
+  .password-toggle:focus {
+    outline: 3px solid $retro-yellow;
+    outline-offset: 1px;
+    border: none;
+    box-shadow: none;
   }
 }
 
 /* Handle landscape orientation and keyboard visibility */
 @media (max-height: 600px) and (orientation: landscape) {
   .retro-container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: $retro-spacing-md;
+    padding-bottom: $retro-spacing-md;
   }
 
   .retro-login {
-    max-height: calc(100vh - 2rem);
+    max-height: calc(100vh - #{$retro-spacing-xl});
     overflow-y: auto;
   }
 
   .retro-header {
-    margin-bottom: 1rem;
+    margin-bottom: $retro-spacing-md;
   }
 
   .retro-form {
-    padding: 1rem 0;
+    padding: $retro-spacing-md 0;
+  }
+
+  .form-actions {
+    margin-top: $retro-spacing-md;
   }
 }
 
 /* Specific handling for very small screens */
 @media (max-height: 500px) {
   .retro-container {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: $retro-spacing-sm;
+    padding-bottom: $retro-spacing-sm;
   }
 
   .retro-login {
-    padding: 1rem;
+    padding: $retro-spacing-md;
   }
 
   .pixel-border {
-    padding: 0.25rem;
+    padding: $retro-spacing-xs;
   }
 
   .retro-title {
-    font-size: 1.2rem;
+    font-size: $retro-font-size-lg;
   }
 
   .input-group {
-    margin-bottom: 1rem;
+    margin-bottom: $retro-spacing-md;
   }
 
   .form-actions {
-    margin-top: 1rem;
+    margin-top: $retro-spacing-md;
   }
 }
 
@@ -860,7 +689,7 @@ const handleSubmit = (e: Event) => {
 
   .form-actions {
     margin-top: auto;
-    padding-top: 1rem;
+    padding-top: $retro-spacing-md;
   }
 }
 
@@ -868,16 +697,16 @@ const handleSubmit = (e: Event) => {
 @media (hover: none) and (pointer: coarse) {
   .retro-button:active {
     transform: scale(0.98);
-    transition: transform 0.1s ease;
+    transition: transform $retro-transition-fast;
   }
 
   .password-toggle:active {
-    transform: scale(0.95);
+    transform: translateY(-50%) scale(0.95);
   }
 
-  /* Ensure sufficient spacing between interactive elements */
+  // Ensure sufficient spacing between interactive elements
   .input-wrapper {
-    margin-bottom: 0.5rem;
+    margin-bottom: $retro-spacing-sm;
   }
 
   .field-error {
@@ -887,47 +716,34 @@ const handleSubmit = (e: Event) => {
 
 /* Dynamic keyboard handling */
 .retro-container:has(.retro-login) {
-  transition: padding 0.3s ease;
+  transition: padding $retro-transition-base;
 }
 
 .retro-container:has(.retro-login)[style*="--keyboard-visible: 1"] {
-  padding-top: 1rem !important;
-  padding-bottom: 1rem !important;
+  padding-top: $retro-spacing-md !important;
+  padding-bottom: $retro-spacing-md !important;
 }
 
 .retro-container:has(.retro-login)[style*="--keyboard-visible: 1"] .retro-login {
-  max-height: calc(100vh - 2rem);
-  transition: max-height 0.3s ease;
-}
-
-/* Improve focus visibility on mobile */
-@media (max-width: 768px) {
-  input:focus, button:focus {
-    outline: 3px solid #a8a832;
-    outline-offset: 2px;
-  }
-
-  .password-toggle:focus {
-    outline: 3px solid #a8a832;
-    outline-offset: 1px;
-  }
+  max-height: calc(100vh - #{$retro-spacing-xl});
+  transition: max-height $retro-transition-base;
 }
 
 /* Better tap targets for mobile */
 @media (max-width: 480px) {
   .retro-input {
-    padding: 1rem 0.75rem; /* Larger padding for easier tapping */
+    padding: $retro-spacing-md 0.75rem;
     min-height: 48px;
   }
 
   .retro-button {
-    padding: 1rem 2rem;
+    padding: $retro-spacing-md #{$retro-spacing-xl};
     min-height: 52px;
   }
 
   .remember-label {
     font-size: 0.85rem;
-    gap: 0.5rem;
+    gap: $retro-spacing-sm;
   }
 
   .checkbox-custom {
@@ -936,12 +752,12 @@ const handleSubmit = (e: Event) => {
   }
 
   .form-options {
-    margin: 1rem 0;
+    margin: $retro-spacing-md 0;
   }
 
-  /* Ensure labels are easily tappable */
+  // Ensure labels are easily tappable
   .retro-label {
-    padding: 0.25rem 0;
+    padding: $retro-spacing-xs 0;
     margin-bottom: 0.75rem;
   }
 }

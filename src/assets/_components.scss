@@ -1,0 +1,225 @@
+@use './variables' as *;
+@use './retro-effects' as *;
+
+@mixin text-glow($color, $intensity: 4px) {
+  color: $color;
+  text-shadow: 0 0 $intensity $color;
+}
+
+@mixin box-glow($color, $size: sm) {
+  $shadow: if($size == sm, $retro-shadow-sm, if($size == md, $retro-shadow-md, $retro-shadow-lg));
+  box-shadow: $shadow $color, inset $shadow rgba(red($color), green($color), blue($color), 0.05);
+}
+
+@mixin retro-border($width: thin, $color: primary) {
+  $border-width: if($width == thin, $retro-border-thin, if($width == medium, $retro-border-medium, $retro-border-thick));
+  $border-color: if($color == primary, $retro-border-primary, if($color == secondary, $retro-border-secondary, $retro-border-accent));
+  
+  border: $border-width solid $border-color;
+  border-radius: 0;
+}
+
+.retro-container {
+  position: relative;
+  min-height: 100vh;
+  background: $retro-bg-primary;
+  overflow: hidden;
+
+  &.crt-screen {
+    @extend .crt-screen;
+  }
+}
+
+.retro-box {
+  position: relative;
+  background: $retro-bg-secondary;
+  @include retro-border(medium, primary);
+  padding: $retro-spacing-xl;
+  @include box-glow($retro-green, md);
+  z-index: 1;
+}
+
+.pixel-border {
+  @include retro-border(thin, secondary);
+  padding: $retro-spacing-sm;
+  margin-bottom: $retro-spacing-md;
+  background: $retro-bg-tertiary;
+  box-shadow: $retro-shadow-sm $retro-glow-purple;
+}
+
+// Typography
+.retro-title {
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-2xl;
+  font-weight: bold;
+  @include text-glow($retro-text-primary, 8px);
+  letter-spacing: 2px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.retro-subtitle {
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-md;
+  @include text-glow($retro-text-secondary, 4px);
+  letter-spacing: 1px;
+}
+
+.retro-label {
+  display: block;
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-md;
+  @include text-glow($retro-border-secondary, 4px);
+  margin-bottom: $retro-spacing-sm;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.retro-input {
+  width: 100%;
+  padding: 0.75rem;
+  background: $retro-bg-input;
+  @include retro-border(thin, primary);
+  color: $retro-text-primary;
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-base;
+  box-shadow: inset $retro-shadow-sm rgba(74, 159, 74, 0.1);
+  transition: all $retro-transition-base;
+
+  &::placeholder {
+    color: $retro-text-muted;
+  }
+
+  &:focus {
+    outline: 3px solid $retro-yellow;
+    outline-offset: 2px;
+    border-color: $retro-yellow;
+    box-shadow:
+      $retro-shadow-sm $retro-glow-yellow,
+      inset $retro-shadow-sm rgba(168, 168, 50, 0.1);
+    background: #252525;
+  }
+
+  &.input-valid {
+    border-color: $retro-green;
+    box-shadow:
+      $retro-shadow-sm $retro-glow-green,
+      inset 0 0 6px rgba(107, 184, 107, 0.1);
+  }
+
+  &.input-invalid {
+    border-color: $retro-red;
+    box-shadow:
+      $retro-shadow-sm $retro-glow-red,
+      inset 0 0 6px rgba(212, 106, 106, 0.1);
+
+    &:focus {
+      outline-color: $retro-red;
+      border-color: $retro-red;
+      box-shadow:
+        $retro-shadow-sm $retro-glow-red,
+        inset 0 0 6px rgba(212, 106, 106, 0.2);
+    }
+  }
+}
+
+.retro-button {
+  width: 100%;
+  padding: $retro-spacing-md;
+  background: $retro-green-darker;
+  @include retro-border(medium, primary);
+  color: $retro-yellow-light;
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-lg;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: $retro-shadow-sm $retro-glow-green;
+  transition: all $retro-transition-base;
+
+  &:hover:not(:disabled) {
+    background: #3d6020;
+    border-color: $retro-green-light;
+    box-shadow: 0 0 18px rgba(139, 191, 98, 0.5);
+    transform: scale(1.02);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+    box-shadow: 0 0 8px rgba(107, 184, 107, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: $retro-bg-primary;
+    border-color: $retro-border-primary;
+    box-shadow: none;
+    transform: none;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $retro-yellow;
+    outline-offset: 2px;
+  }
+}
+
+.field-error {
+  margin-top: $retro-spacing-sm;
+  font-family: $retro-font-family;
+  @include text-glow($retro-red, 4px);
+  font-size: $retro-font-size-sm;
+  letter-spacing: 1px;
+  background: $retro-red-bg;
+  padding: $retro-spacing-xs $retro-spacing-sm;
+  border-left: 3px solid $retro-red;
+}
+
+.validation-indicator {
+  margin-left: $retro-spacing-sm;
+  font-weight: bold;
+
+  &.success {
+    @include text-glow($retro-green, 4px);
+  }
+}
+
+.corner-decoration {
+  position: absolute;
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-xl;
+  @include text-glow($retro-border-primary, 4px);
+
+  &.top-left {
+    top: 10px;
+    left: 10px;
+  }
+
+  &.top-right {
+    top: 10px;
+    right: 10px;
+  }
+
+  &.bottom-left {
+    bottom: 10px;
+    left: 10px;
+  }
+
+  &.bottom-right {
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

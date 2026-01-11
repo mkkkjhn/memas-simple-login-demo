@@ -1,0 +1,53 @@
+@use './variables' as *;
+
+@mixin absolute-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@mixin no-pointer-events {
+  pointer-events: none;
+}
+
+// CRT Flicker Animation
+@keyframes flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.98;
+  }
+}
+
+.crt-overlay {
+  @include absolute-full;
+  background: rgba(0, 80, 0, 0.02);
+  @include no-pointer-events;
+  animation: flicker 0.15s infinite linear alternate;
+}
+
+.scanlines {
+  @include absolute-full;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 60, 0, 0.02) 2px,
+    rgba(0, 60, 0, 0.02) 4px
+  );
+  @include no-pointer-events;
+}
+
+.crt-screen {
+  position: relative;
+
+  &::before {
+    content: '';
+    @include absolute-full;
+    background: rgba(0, 100, 0, 0.05);
+    @include no-pointer-events;
+  }
+}

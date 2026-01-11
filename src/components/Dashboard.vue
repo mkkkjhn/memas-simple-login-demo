@@ -17,7 +17,7 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <div class="retro-dashboard">
+  <div class="retro-container crt-screen retro-dashboard">
     <!-- CRT Screen Effect -->
     <div class="crt-overlay"></div>
     <div class="scanlines"></div>
@@ -62,94 +62,50 @@ const handleLogout = () => {
 </template>
 
 <style scoped lang="scss">
+@use '../assets/variables' as *;
+
 .retro-dashboard {
   position: relative;
   min-height: 100vh;
-  background: #1a1a1a;
   overflow: hidden;
-
-  // CRT Screen Effect
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 80, 0, 0.05);
-    pointer-events: none;
-  }
-}
-
-.crt-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 60, 0, 0.02);
-  pointer-events: none;
-  animation: flicker 0.15s infinite linear alternate;
-}
-
-.scanlines {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 40, 0, 0.02) 2px,
-    rgba(0, 40, 0, 0.02) 4px
-  );
-  pointer-events: none;
 }
 
 .retro-header {
-  padding: 1rem 2rem;
+  padding: $retro-spacing-md $retro-spacing-xl;
   position: relative;
   z-index: 2;
-}
-
-.pixel-border {
-  border: 2px solid #4a9f4a;
-  background: #2d2d2d;
-  box-shadow: 0 0 8px rgba(74, 159, 74, 0.2);
 }
 
 .header-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem;
+  padding: $retro-spacing-sm;
 }
 
 .system-info {
-  font-family: 'Courier New', monospace;
-  font-size: 1.2rem;
-  color: #a8a832;
-  text-shadow: 0 0 8px #a8a832;
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-lg;
+  color: $retro-yellow;
+  text-shadow: 0 0 8px $retro-yellow;
   letter-spacing: 1px;
   font-weight: bold;
 }
 
 .retro-logout {
-  padding: 0.5rem 1rem;
+  padding: $retro-spacing-sm $retro-spacing-md;
   background: #602020;
-  border: 2px solid #9f4a4a;
+  border: $retro-border-thin solid $retro-red-dark;
   border-radius: 0;
   color: #d4a4a4;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
+  font-family: $retro-font-family;
+  font-size: $retro-font-size-md;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 0 8px rgba(159, 74, 74, 0.3);
-  transition: all 0.3s ease;
+  box-shadow: $retro-shadow-sm $retro-glow-red;
+  transition: all $retro-transition-base;
 
   &:hover {
     background: #702828;
@@ -161,6 +117,11 @@ const handleLogout = () => {
   &:active {
     transform: scale(0.95);
   }
+
+  &:focus-visible {
+    outline: 3px solid $retro-yellow;
+    outline-offset: 2px;
+  }
 }
 
 .retro-main {
@@ -168,28 +129,28 @@ const handleLogout = () => {
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 100px);
-  padding: 2rem;
+  padding: $retro-spacing-xl;
   position: relative;
   z-index: 1;
 }
 
 .retro-content {
-  background: #2a2a2a;
-  border: 3px solid #4a9f4a;
-  padding: 2rem;
+  position: relative;
+  background: $retro-bg-secondary;
+  border: $retro-border-medium solid $retro-border-primary;
+  padding: $retro-spacing-xl;
+  box-shadow:
+    $retro-shadow-md $retro-glow-green,
+    inset $retro-shadow-md rgba(74, 159, 74, 0.05);
+  z-index: 1;
   width: 100%;
   max-width: 800px;
-  box-shadow:
-    0 0 15px rgba(74, 159, 74, 0.3),
-    inset 0 0 15px rgba(74, 159, 74, 0.05);
-  position: relative;
 }
-
 
 .welcome-section {
   display: grid;
   grid-template-columns: 70% 30%;
-  gap: 2rem;
+  gap: $retro-spacing-xl;
   align-items: center;
   height: 100%;
 }
@@ -202,10 +163,10 @@ const handleLogout = () => {
 }
 
 .image-border-large {
-  border: 4px solid #a8a832;
-  padding: 1rem;
-  background: #2d2d2d;
-  box-shadow: 0 0 20px rgba(168, 168, 50, 0.4);
+  border: $retro-border-thick solid $retro-yellow;
+  padding: $retro-spacing-md;
+  background: $retro-bg-tertiary;
+  box-shadow: $retro-shadow-lg rgba(168, 168, 50, 0.4);
   border-radius: 0;
 }
 
@@ -213,8 +174,8 @@ const handleLogout = () => {
   width: 300px;
   height: 300px;
   object-fit: cover;
-  border: 3px solid #4a9f4a;
-  background: #1a1a1a;
+  border: $retro-border-medium solid $retro-border-primary;
+  background: $retro-bg-primary;
   image-rendering: pixelated;
   border-radius: 0;
 }
@@ -228,14 +189,14 @@ const handleLogout = () => {
 
 .retro-message-simple {
   text-align: center;
-  padding: 1rem;
+  padding: $retro-spacing-md;
 }
 
 .retro-greeting {
-  font-family: 'Courier New', monospace;
+  font-family: $retro-font-family;
   font-size: 2.5rem;
-  color: #a8a832;
-  text-shadow: 0 0 12px #a8a832;
+  color: $retro-yellow;
+  text-shadow: 0 0 12px $retro-yellow;
   font-weight: bold;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -252,52 +213,18 @@ const handleLogout = () => {
   pointer-events: none;
 }
 
-.corner-decoration {
-  position: absolute;
-  font-family: 'Courier New', monospace;
-  font-size: 1.5rem;
-  color: #4a9f4a;
-  text-shadow: 0 0 4px #4a9f4a;
-
-  &.top-left {
-    top: 10px;
-    left: 10px;
-  }
-
-  &.top-right {
-    top: 10px;
-    right: 10px;
-  }
-
-  &.bottom-left {
-    bottom: 10px;
-    left: 10px;
-  }
-
-  &.bottom-right {
-    bottom: 10px;
-    right: 10px;
-  }
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.98; }
-}
-
-
 @media (max-width: 768px) {
   .retro-main {
-    padding: 1rem;
+    padding: $retro-spacing-md;
   }
 
   .retro-content {
-    padding: 1.5rem;
+    padding: $retro-spacing-lg;
   }
 
   .welcome-section {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: $retro-spacing-lg;
   }
 
   .retro-kitty-large {
@@ -306,17 +233,17 @@ const handleLogout = () => {
   }
 
   .retro-greeting {
-    font-size: 2rem;
+    font-size: $retro-font-size-2xl;
   }
 
   .header-content {
     flex-direction: column;
-    gap: 1rem;
+    gap: $retro-spacing-md;
     text-align: center;
   }
 
   .system-info {
-    font-size: 1rem;
+    font-size: $retro-font-size-base;
   }
 }
 </style>

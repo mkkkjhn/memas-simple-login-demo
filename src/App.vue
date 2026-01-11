@@ -41,6 +41,9 @@ button:focus, input:focus {
 
 button {
   cursor: pointer;
+  border: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 input[type="text"], input[type="email"], input[type="password"] {

@@ -264,6 +264,7 @@ const handleSubmit = (e: Event) => {
               <button
                 type="button"
                 class="password-toggle"
+                v-show="password.length > 0"
                 :aria-label="showPassword ? 'Hide password' : 'Show password'"
                 :aria-pressed="showPassword"
                 aria-describedby="password-toggle-desc"
@@ -413,7 +414,7 @@ const handleSubmit = (e: Event) => {
   justify-content: center;
   width: 32px;
   height: 32px;
-  transition: all $retro-transition-base;
+  transition: all $retro-transition-base, opacity $retro-transition-base, visibility $retro-transition-base;
 
   &:hover {
     background: rgba(74, 159, 74, 0.3);

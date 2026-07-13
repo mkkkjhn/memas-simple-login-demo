@@ -39,7 +39,7 @@ const handleLogout = () => {
         <div class="welcome-section">
           <div class="kitty-display-large">
             <div class="image-border-large">
-              <img src="@/assets/kitty.png" alt="Kitty" class="retro-kitty-large" />
+              <img src="@/assets/kitty.webp" alt="Kitty" class="retro-kitty-large" />
             </div>
           </div>
 
